@@ -7,6 +7,8 @@ import java.util.Properties;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
+import com.aliction.git.properties.GitRemoteProperties;
+
 public class GitHubCredentials {
 
     private UsernamePasswordCredentialsProvider credentialsProvider = null;
@@ -26,6 +28,10 @@ public class GitHubCredentials {
         space = props.getProperty("login");
         this.credentialsProvider = new UsernamePasswordCredentialsProvider(props.getProperty("login"), props.getProperty("password"));
         System.err.println("credentials: " + space + " : " + props.getProperty("password"));
+    }
+    public GitHubCredentials(GitRemoteProperties props) {
+        space = props.getLogin();
+        this.credentialsProvider = new UsernamePasswordCredentialsProvider(props.getLogin(), props.getPassword());
     }
 
     public CredentialsProvider getCredentials() {

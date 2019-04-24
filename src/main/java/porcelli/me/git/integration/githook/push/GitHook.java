@@ -18,9 +18,14 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RefSpec;
+
+import com.aliction.git.properties.GitRemoteProperties;
+import com.aliction.git.properties.IgnoreList;
+import com.aliction.git.remote.integration.GitIntegration;
+import com.aliction.git.remote.integration.GitRemoteIntegration;
+
 import porcelli.me.git.integration.githook.push.command.SetupRemote;
 import porcelli.me.git.integration.githook.push.github.GitHubCredentials;
-import porcelli.me.git.integration.githook.push.github.GitHubIntegration;
 
 import static java.util.Comparator.comparing;
 
@@ -36,9 +41,27 @@ public class GitHook {
         }
 
         // setup GitHub credentials and integration
-        final GitHubCredentials ghCredentials = new GitHubCredentials();
-        final GitHubIntegration integration = new GitHubIntegration();
+        GitRemoteProperties properties = new GitRemoteProperties();
 
+        if(!properties.CheckMandatory()) {
+        	return;
+        }
+        final GitHubCredentials ghCredentials = new GitHubCredentials(properties);
+        final GitRemoteIntegration integration = GitIntegration.getIntegration(properties);
+        if (integration == null) {
+        	return;
+        }
+        IgnoreList ignoreList = new IgnoreList(properties);
+        
+        for (String ignoreitem : ignoreList.getIgnoreList()) {
+        	if(parentFolderName.matches(ignoreitem)) {
+        		System.out.println("This project "
+        	+ parentFolderName.substring(0, parentFolderName.length() - 4) 
+        		+ " will not be pushed to remote repo as it's name matches your ignore list");
+        		return;
+        	}
+        }
+        
         // setup the JGit repository access
         final Repository repo = new FileRepositoryBuilder()
                 .setGitDir(currentPath.toFile())
