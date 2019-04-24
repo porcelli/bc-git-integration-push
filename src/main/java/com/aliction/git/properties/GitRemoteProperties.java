@@ -92,7 +92,7 @@ public class GitRemoteProperties {
 	}
 
 	private void setGitProvider(String provider) {
-		gitProvider = GitProvider.valueOf(provider);
+		gitProvider = GitProvider.find(provider);
 		System.out.println("The git provider is : " + gitProvider);
 	}
 

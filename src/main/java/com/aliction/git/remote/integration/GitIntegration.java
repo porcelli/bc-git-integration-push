@@ -13,8 +13,8 @@ public class GitIntegration {
         case GitLab:
             integration = new GitLabIntegration(properties);
         	break;
-        case GitBucket:
-        	System.out.println("Support for GitBucket is still under development");
+        case BitBucket:
+        	System.out.println("Support for BitBucket is still under development");
         	break;
         default:
         	System.out.println("GitHub and GitLab are the only current supported providers");

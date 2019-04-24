@@ -1,0 +1,3 @@
+[remote "origin"]
+	url = https://gitlab.consulting.redhat.com/aibrahim/bc-integration-push
+	fetch = +refs/heads/*:refs/remotes/origin/*
