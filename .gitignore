@@ -1,6 +1,7 @@
 /target
 /local
 target/
+config
 # Eclipse, Netbeans and IntelliJ files
 /.*
 /**/.*
