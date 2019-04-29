@@ -1,5 +1,7 @@
 package porcelli.me.git.integration.githook.push;
 
+import static java.util.Comparator.comparing;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,8 +29,6 @@ import com.aliction.git.remote.integration.GitRemoteIntegration;
 import porcelli.me.git.integration.githook.push.command.SetupRemote;
 import porcelli.me.git.integration.githook.push.github.GitHubCredentials;
 
-import static java.util.Comparator.comparing;
-
 public class GitHook {
 
     public static void main(String[] args) throws IOException, GitAPIException {
@@ -43,29 +43,27 @@ public class GitHook {
         // setup GitHub credentials and integration
         GitRemoteProperties properties = new GitRemoteProperties();
 
-        if(!properties.CheckMandatory()) {
-        	return;
+        if (!properties.CheckMandatory()) {
+            return;
         }
         final GitHubCredentials ghCredentials = new GitHubCredentials(properties);
         final GitRemoteIntegration integration = GitIntegration.getIntegration(properties);
         if (integration == null) {
-        	return;
+            return;
         }
         IgnoreList ignoreList = new IgnoreList(properties);
-        
+
         for (String ignoreitem : ignoreList.getIgnoreList()) {
-        	if(parentFolderName.matches(ignoreitem)) {
-        		System.out.println("This project "
-        	+ parentFolderName.substring(0, parentFolderName.length() - 4) 
-        		+ " will not be pushed to remote repo as it's name matches your ignore list");
-        		return;
-        	}
+            if (parentFolderName.matches(ignoreitem)) {
+                System.out.println("This project " + parentFolderName.substring(0, parentFolderName.length() - 4) + " will not be pushed to remote repo as it's name matches your ignore list");
+                return;
+            }
         }
-        
+
         // setup the JGit repository access
         final Repository repo = new FileRepositoryBuilder()
-                .setGitDir(currentPath.toFile())
-                .build();
+                                                           .setGitDir(currentPath.toFile())
+                                                           .build();
         final Git git = new Git(repo);
 
         // collect all remotes for the current repository
@@ -95,10 +93,10 @@ public class GitHook {
                     try {
                         //get the branches where this commit is referenced
                         final Map<ObjectId, String> branchesAffected = git
-                                .nameRev()
-                                .addPrefix("refs/heads")
-                                .add(latestCommit)
-                                .call();
+                                                                          .nameRev()
+                                                                          .addPrefix("refs/heads")
+                                                                          .add(latestCommit)
+                                                                          .call();
 
                         //iterate over all remote repositories
                         for (String remoteName : remotes) {
@@ -106,10 +104,10 @@ public class GitHook {
                             for (String ref : branchesAffected.values()) {
                                 // push changes to the remote repository
                                 git.push()
-                                        .setRefSpecs(new RefSpec(ref + ":" + ref))
-                                        .setRemote(remoteURL)
-                                        .setCredentialsProvider(ghCredentials.getCredentials())
-                                        .call();
+                                   .setRefSpecs(new RefSpec(ref + ":" + ref))
+                                   .setRemote(remoteURL)
+                                   .setCredentialsProvider(ghCredentials.getCredentials())
+                                   .call();
 
                                 //check if the branch has a remote config
                                 final String remote = storedConfig.getString("branch", ref, "remote");

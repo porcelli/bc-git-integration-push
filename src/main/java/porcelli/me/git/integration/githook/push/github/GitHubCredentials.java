@@ -29,6 +29,7 @@ public class GitHubCredentials {
         this.credentialsProvider = new UsernamePasswordCredentialsProvider(props.getProperty("login"), props.getProperty("password"));
         System.err.println("credentials: " + space + " : " + props.getProperty("password"));
     }
+
     public GitHubCredentials(GitRemoteProperties props) {
         space = props.getLogin();
         this.credentialsProvider = new UsernamePasswordCredentialsProvider(props.getLogin(), props.getPassword());
