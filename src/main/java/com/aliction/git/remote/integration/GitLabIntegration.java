@@ -1,5 +1,7 @@
 package com.aliction.git.remote.integration;
 
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
@@ -11,20 +13,26 @@ public class GitLabIntegration implements GitRemoteIntegration {
     GitLabApi gitlab;
     String user;
     Project gitlabProject;
+    GitRemoteProperties props;
+    Boolean usingToken;
+    CredentialsProvider credentialsProvider;
+    String remoteURL = null;
 
     public GitLabIntegration() {
         // TODO Auto-generated constructor stub
 
     }
 
-    public GitLabIntegration(GitRemoteProperties props) {
-
+    public GitLabIntegration(GitRemoteProperties properties) {
+        props = properties;
         if (props.getToken().isEmpty()) {
+            usingToken = false;
             System.out.println("Connecting using username and password is not supported with gitlab, kindly use token instead.");
             return;
             //gitlab = new GitLabApi(props.getRemoteGitUrl(), props.getLogin(), props.getPassword());
             //gitlab4j only support token authentication .. user/password is not supported
         } else {
+            usingToken = true;
             System.out.println("Connecting using token");
             gitlab = new GitLabApi(props.getRemoteGitUrl(), props.getToken());
         }
@@ -42,29 +50,39 @@ public class GitLabIntegration implements GitRemoteIntegration {
 
     @Override
     public String createRepository(String repoName) {
-        String url = "";
         try {
             gitlabProject = gitlab.getProjectApi().createProject(repoName);
         } catch (GitLabApiException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        url = gitlabProject.getWebUrl();
-        return url;
+        remoteURL = gitlabProject.getHttpUrlToRepo();
+        return remoteURL;
     }
 
     @Override
     public String deleteRepository(String repoName) {
-        String url = null;
         try {
             gitlabProject = gitlab.getProjectApi().getProject(user + "/" + repoName);
-            url = gitlabProject.getWebUrl();
+            remoteURL = gitlabProject.getHttpUrlToRepo();
             gitlab.getProjectApi().deleteProject(gitlabProject);
         } catch (GitLabApiException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return url;
+        return remoteURL;
     }
+
+    @Override
+    public CredentialsProvider getCredentialsProvider() {
+        // TODO Auto-generated method stub
+        if (usingToken) {
+            credentialsProvider = new UsernamePasswordCredentialsProvider(props.getLogin(), props.getToken());
+        } else {
+            credentialsProvider = new UsernamePasswordCredentialsProvider(props.getLogin(), props.getPassword());
+        }
+        return credentialsProvider;
+    }
+
 
 }

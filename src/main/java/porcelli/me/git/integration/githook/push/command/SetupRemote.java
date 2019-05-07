@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import porcelli.me.git.integration.githook.push.github.GitHubCredentials;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -15,12 +14,9 @@ import com.aliction.git.remote.integration.GitRemoteIntegration;
 
 public class SetupRemote implements Command {
 
-    private final GitHubCredentials credentials;
     private final GitRemoteIntegration integration;
 
-    public SetupRemote(GitHubCredentials credentials,
-                       GitRemoteIntegration integration) {
-        this.credentials = credentials;
+    public SetupRemote(GitRemoteIntegration integration) {
         this.integration = integration;
     }
 
@@ -40,8 +36,7 @@ public class SetupRemote implements Command {
             storedConfig.setString("branch", shortName, "merge", "refs/heads/" + shortName);
         }
         storedConfig.save();
-
-        git.push().setCredentialsProvider(credentials.getCredentials()).call();
+        git.push().setCredentialsProvider(integration.getCredentialsProvider()).call();
         return repoName;
     }
 }

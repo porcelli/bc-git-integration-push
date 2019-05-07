@@ -27,7 +27,6 @@ import com.aliction.git.remote.integration.GitIntegration;
 import com.aliction.git.remote.integration.GitRemoteIntegration;
 
 import porcelli.me.git.integration.githook.push.command.SetupRemote;
-import porcelli.me.git.integration.githook.push.github.GitHubCredentials;
 
 public class GitHook {
 
@@ -35,6 +34,7 @@ public class GitHook {
         // collect the repository info, like path and parent path
         final Path currentPath = new File("").toPath().toAbsolutePath();
         final String parentFolderName = currentPath.getParent().getName(currentPath.getParent().getNameCount() - 1).toString();
+        final String projectName = currentPath.getName(currentPath.getNameCount() - 1).toString();
         // ignoring system space
         if (parentFolderName.equalsIgnoreCase("system")) {
             return;
@@ -46,7 +46,6 @@ public class GitHook {
         if (!properties.CheckMandatory()) {
             return;
         }
-        final GitHubCredentials ghCredentials = new GitHubCredentials(properties);
         final GitRemoteIntegration integration = GitIntegration.getIntegration(properties);
         if (integration == null) {
             return;
@@ -54,8 +53,8 @@ public class GitHook {
         IgnoreList ignoreList = new IgnoreList(properties);
 
         for (String ignoreitem : ignoreList.getIgnoreList()) {
-            if (parentFolderName.matches(ignoreitem)) {
-                System.out.println("This project " + parentFolderName.substring(0, parentFolderName.length() - 4) + " will not be pushed to remote repo as it's name matches your ignore list");
+            if (projectName.matches(ignoreitem.trim())) {
+                System.out.println("This project " + projectName.substring(0, projectName.length() - 4) + " will not be pushed to remote repo as it's name matches your ignore list");
                 return;
             }
         }
@@ -72,7 +71,7 @@ public class GitHook {
 
         if (remotes.isEmpty()) {
             //create a remote repository, if it does not exist
-            new SetupRemote(ghCredentials, integration).execute(git, currentPath);
+            new SetupRemote(integration).execute(git, currentPath);
         }
 
         // mechanism to find the latest commit
@@ -106,7 +105,7 @@ public class GitHook {
                                 git.push()
                                    .setRefSpecs(new RefSpec(ref + ":" + ref))
                                    .setRemote(remoteURL)
-                                   .setCredentialsProvider(ghCredentials.getCredentials())
+                                   .setCredentialsProvider(integration.getCredentialsProvider())
                                    .call();
 
                                 //check if the branch has a remote config
