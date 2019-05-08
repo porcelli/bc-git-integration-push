@@ -53,7 +53,7 @@ public class GitHook {
         IgnoreList ignoreList = new IgnoreList(properties);
 
         for (String ignoreitem : ignoreList.getIgnoreList()) {
-            if (projectName.matches(ignoreitem.trim())) {
+            if (projectName.matches(ignoreitem)) {
                 System.out.println("This project " + projectName.substring(0, projectName.length() - 4) + " will not be pushed to remote repo as it's name matches your ignore list");
                 return;
             }

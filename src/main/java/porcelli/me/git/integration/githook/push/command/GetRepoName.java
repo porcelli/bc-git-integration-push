@@ -8,6 +8,6 @@ public class GetRepoName implements Command {
         return currentPath
                           .getName(currentPath.getNameCount() - 1)
                           .toString()
-                          .replaceAll(".git", "");
+                          .replaceAll("\\.git", "");
     }
 }
