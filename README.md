@@ -54,6 +54,7 @@ password=
 token=hdy2Fhd63Gi27h3IJqw
 remoteGitUrl=https://api.github.com
 provider=GitHub
+gitlabGroup=Group/subgroup
 ignore=.*demo.*, test.*
 ```
 ### Parameters:
@@ -63,11 +64,13 @@ ignore=.*demo.*, test.*
  - **token:** this is the generated token to replace username/password unsecure connection, if this is not set you will get a warning that you are using an unsecured connection.
  - **remoteGitUrl:** This can be either a public provider URL or locally hosted enterprise for any provider.
  - **provider:** This is the flavor of the Git provider, only 3 values are accepted here: GitHub, GitLab and BitBucket when it is supported.
+ - **gitlabGroup:** This parameter should contains the GitLab Group path, if it is empty, the default behaviour of creating the project under the user account will take effect.
  - **ignore:** This is a comma separated regular expressions to ignore the project names that matches any of these expressions
 
 ### Note: 
  - GitLab only supports token authentication
- - Github url should be the api url ex: api.github.com and not www.github.com
+ - GitHub url should be the api url ex: api.github.com and not www.github.com
+ - GitLab Groups has no equivalent in Github, so the parameter will be totally ignored when provider is GitHub.
 
 
 ## License
