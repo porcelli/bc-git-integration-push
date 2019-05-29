@@ -17,6 +17,7 @@ public class GitRemoteProperties {
     private String token;
     private String ignoreList;
     private GitProvider gitProvider;
+    private String gitLabGroup;
     private Properties props;
 
     public GitRemoteProperties() {
@@ -35,6 +36,7 @@ public class GitRemoteProperties {
         setToken(props.getProperty("token"));
         setIgnoreList(props.getProperty("ignore"));
         setGitProvider(props.getProperty("provider"));
+        setGitLabGroup(props.getProperty("gitlabGroup"));
     }
 
     public boolean LoadProperties(File propertyFile) {
@@ -72,6 +74,7 @@ public class GitRemoteProperties {
         try {
             propertyFile.createNewFile();
             Properties props = new Properties();
+            props.setProperty("gitlabGroup", "Group/subgroup");
             props.setProperty("provider", "GitHub");
             props.setProperty("remoteGitUrl", "https://api.github.com/");
             props.setProperty("login", "");
@@ -95,6 +98,14 @@ public class GitRemoteProperties {
     private void setGitProvider(String provider) {
         gitProvider = GitProvider.find(provider);
         System.out.println("The git provider is : " + gitProvider);
+    }
+
+    public String getGitLabGroup() {
+        return gitLabGroup;
+    }
+
+    public void setGitLabGroup(String gitLabGroup) {
+        this.gitLabGroup = gitLabGroup;
     }
 
     public String getRemoteGitUrl() {
@@ -125,7 +136,7 @@ public class GitRemoteProperties {
         return token;
     }
 
-    public void setToken(String token) {
+    private void setToken(String token) {
         this.token = token;
     }
 

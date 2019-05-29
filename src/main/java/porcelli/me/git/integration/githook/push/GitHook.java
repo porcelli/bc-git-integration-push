@@ -23,6 +23,7 @@ import org.eclipse.jgit.transport.RefSpec;
 
 import com.aliction.git.properties.GitRemoteProperties;
 import com.aliction.git.properties.IgnoreList;
+import com.aliction.git.remote.exceptions.GroupNotFoundException;
 import com.aliction.git.remote.integration.GitIntegration;
 import com.aliction.git.remote.integration.GitRemoteIntegration;
 
@@ -30,7 +31,7 @@ import porcelli.me.git.integration.githook.push.command.SetupRemote;
 
 public class GitHook {
 
-    public static void main(String[] args) throws IOException, GitAPIException {
+    public static void main(String[] args) throws IOException, GitAPIException, GroupNotFoundException {
         // collect the repository info, like path and parent path
         final Path currentPath = new File("").toPath().toAbsolutePath();
         final String parentFolderName = currentPath.getParent().getName(currentPath.getParent().getNameCount() - 1).toString();

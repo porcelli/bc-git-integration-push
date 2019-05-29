@@ -1,10 +1,11 @@
 package com.aliction.git.remote.integration;
 
 import com.aliction.git.properties.GitRemoteProperties;
+import com.aliction.git.remote.exceptions.GroupNotFoundException;
 
 public class GitIntegration {
 
-    public static GitRemoteIntegration getIntegration(GitRemoteProperties properties) {
+    public static GitRemoteIntegration getIntegration(GitRemoteProperties properties) throws GroupNotFoundException {
         GitRemoteIntegration integration = null;
 
         switch (properties.getGitProvider()) {

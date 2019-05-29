@@ -4,9 +4,11 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Group;
 import org.gitlab4j.api.models.Project;
 
 import com.aliction.git.properties.GitRemoteProperties;
+import com.aliction.git.remote.exceptions.GroupNotFoundException;
 
 public class GitLabIntegration implements GitRemoteIntegration {
 
@@ -17,13 +19,14 @@ public class GitLabIntegration implements GitRemoteIntegration {
     Boolean usingToken;
     CredentialsProvider credentialsProvider;
     String remoteURL = null;
+    Integer groupId = -1;
 
     public GitLabIntegration() {
         // TODO Auto-generated constructor stub
 
     }
 
-    public GitLabIntegration(GitRemoteProperties properties) {
+    public GitLabIntegration(GitRemoteProperties properties) throws GroupNotFoundException {
         props = properties;
         if (props.getToken().isEmpty()) {
             usingToken = false;
@@ -38,20 +41,35 @@ public class GitLabIntegration implements GitRemoteIntegration {
         }
         try {
             user = gitlab.getUserApi().getCurrentUser().getUsername();
+            groupId = getGroupId(props.getGitLabGroup());
         } catch (GitLabApiException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public String createProject(String projectName, GitRemoteProperties props) {
-        return "";
+    public Integer getGroupId(String groupPath) throws GroupNotFoundException {
+
+        if (!groupPath.isEmpty()) {
+            try {
+                Group group = gitlab.getGroupApi().getGroup(groupPath);
+                groupId = group.getId();
+            } catch (GitLabApiException e) {
+                // TODO Auto-generated catch block
+                throw new GroupNotFoundException("Group \"" + groupPath + "\" is not found");
+            }
+        }
+        return groupId;
     }
 
     @Override
     public String createRepository(String repoName) {
         try {
-            gitlabProject = gitlab.getProjectApi().createProject(repoName);
+            if (groupId >= 0) {
+                gitlabProject = gitlab.getProjectApi().createProject(groupId, repoName);
+            } else {
+                gitlabProject = gitlab.getProjectApi().createProject(repoName);
+            }
         } catch (GitLabApiException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -63,7 +81,12 @@ public class GitLabIntegration implements GitRemoteIntegration {
     @Override
     public String deleteRepository(String repoName) {
         try {
-            gitlabProject = gitlab.getProjectApi().getProject(user + "/" + repoName);
+            if (groupId >= 0) {
+                gitlabProject = gitlab.getProjectApi().getProject(props.getGitLabGroup(), repoName);
+            } else {
+                gitlabProject = gitlab.getProjectApi().getProject(user, repoName);
+                //            gitlabProject = gitlab.getProjectApi().getProject(user + "/" + repoName);
+            }
             remoteURL = gitlabProject.getHttpUrlToRepo();
             gitlab.getProjectApi().deleteProject(gitlabProject);
         } catch (GitLabApiException e) {
@@ -83,6 +106,5 @@ public class GitLabIntegration implements GitRemoteIntegration {
         }
         return credentialsProvider;
     }
-
 
 }
