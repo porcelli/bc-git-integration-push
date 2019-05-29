@@ -14,6 +14,7 @@ This project is forked from https://github.com/porcelli/bc-git-integration-push 
  - Ignore pushing: ignore pushing projects with project name matching patterns defined in ignore parameter in config file.
  - Token authentication: add support to use token for both gitlab and github
  - Descriptive messages: add some output messages to instruct users, and provide info.
+ - GitLab Groups: add support to create projects under specific GitLab groups.
 
 ## How to build
 
