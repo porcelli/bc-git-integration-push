@@ -18,26 +18,48 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RefSpec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import porcelli.me.git.integration.githook.push.command.SetupRemote;
-import porcelli.me.git.integration.githook.push.github.GitHubCredentials;
-import porcelli.me.git.integration.githook.push.github.GitHubIntegration;
+import porcelli.me.git.integration.githook.push.integration.GitRemoteIntegration;
+import porcelli.me.git.integration.githook.push.properties.GitRemoteProperties;
+import porcelli.me.git.integration.githook.push.properties.IgnoreList;
 
 import static java.util.Comparator.comparing;
 
 public class GitHook {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitHook.class);
+
     public static void main(String[] args) throws IOException, GitAPIException {
+
         // collect the repository info, like path and parent path
         final Path currentPath = new File("").toPath().toAbsolutePath();
         final String parentFolderName = currentPath.getParent().getName(currentPath.getParent().getNameCount() - 1).toString();
+        final String projectName = currentPath.getName(currentPath.getNameCount() - 1).toString();
+
         // ignoring system space
         if (parentFolderName.equalsIgnoreCase("system")) {
+            LOGGER.info("System repositories are ignored.");
             return;
         }
 
-        // setup GitHub credentials and integration
-        final GitHubCredentials ghCredentials = new GitHubCredentials();
-        final GitHubIntegration integration = new GitHubIntegration();
+        final GitRemoteProperties properties = new GitRemoteProperties();
+
+        if (!properties.validate()) {
+            return;
+        }
+
+        final IgnoreList ignoreList = new IgnoreList(properties);
+
+        for (final String ignore : ignoreList.getIgnoreList()) {
+            if (projectName.matches(ignore)) {
+                LOGGER.warn("This project " + projectName.substring(0, projectName.length() - 4) + " will not be pushed to remote repo as it's name matches your ignore list");
+                return;
+            }
+        }
+
+        final GitRemoteIntegration integration = properties.getGitProvider().getRemoteIntegration(properties);
 
         // setup the JGit repository access
         final Repository repo = new FileRepositoryBuilder()
@@ -51,7 +73,7 @@ public class GitHook {
 
         if (remotes.isEmpty()) {
             //create a remote repository, if it does not exist
-            new SetupRemote(ghCredentials, integration).execute(git, currentPath);
+            new SetupRemote(integration).execute(git, currentPath);
         }
 
         // mechanism to find the latest commit
@@ -63,6 +85,7 @@ public class GitHook {
                     try {
                         return revWalk.parseCommit(branch.getObjectId());
                     } catch (Exception e) {
+                        LOGGER.error("An unexpected error occurred.", e);
                         throw new RuntimeException(e);
                     }
                 })
@@ -85,7 +108,7 @@ public class GitHook {
                                 git.push()
                                         .setRefSpecs(new RefSpec(ref + ":" + ref))
                                         .setRemote(remoteURL)
-                                        .setCredentialsProvider(ghCredentials.getCredentials())
+                                        .setCredentialsProvider(integration.getCredentialsProvider())
                                         .call();
 
                                 //check if the branch has a remote config
@@ -99,7 +122,7 @@ public class GitHook {
                             }
                         }
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        LOGGER.error("An unexpected error occurred.", e);
                     }
                 });
     }
