@@ -4,22 +4,18 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import porcelli.me.git.integration.githook.push.github.GitHubCredentials;
-import porcelli.me.git.integration.githook.push.github.GitHubIntegration;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.StoredConfig;
+import porcelli.me.git.integration.githook.push.integration.GitRemoteIntegration;
 
 public class SetupRemote implements Command {
 
-    private final GitHubCredentials credentials;
-    private final GitHubIntegration integration;
+    private final GitRemoteIntegration integration;
 
-    public SetupRemote(GitHubCredentials credentials,
-                       GitHubIntegration integration) {
-        this.credentials = credentials;
+    public SetupRemote(final GitRemoteIntegration integration) {
         this.integration = integration;
     }
 
@@ -40,7 +36,7 @@ public class SetupRemote implements Command {
         }
         storedConfig.save();
 
-        git.push().setCredentialsProvider(credentials.getCredentials()).call();
+        git.push().setCredentialsProvider(integration.getCredentialsProvider()).call();
         return repoName;
     }
 }
