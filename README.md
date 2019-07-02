@@ -57,7 +57,7 @@ login=
 password=
 token=hdy2Fhd63Gi27h3IJqw
 remoteGitUrl=https://api.github.com
-provider=GitHub
+provider=GIT_HUB
 ignore=.*demo.*, test.*
 ```
 ### Parameters:
