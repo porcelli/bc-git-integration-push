@@ -4,10 +4,13 @@ import java.io.IOException;
 
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.kohsuke.github.GHFileNotFoundException;
+import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
 import com.aliction.git.properties.GitRemoteProperties;
+import com.aliction.git.remote.exceptions.GroupNotFoundException;
 
 public class GitHubIntegration implements GitRemoteIntegration {
 
@@ -18,13 +21,14 @@ public class GitHubIntegration implements GitRemoteIntegration {
     Boolean usingToken;
     CredentialsProvider credentialsProvider;
     String remoteURL = null;
+    long groupId = -1;
 
     public GitHubIntegration() {
         // TODO Auto-generated constructor stub
     }
 
     @SuppressWarnings("deprecation")
-    public GitHubIntegration(GitRemoteProperties properties) {
+    public GitHubIntegration(GitRemoteProperties properties) throws GroupNotFoundException {
         // TODO Auto-generated constructor stub
         props = properties;
         try {
@@ -40,19 +44,46 @@ public class GitHubIntegration implements GitRemoteIntegration {
             }
             //			github = GitHub.connect();
             user = github.getMyself().getLogin();
+            groupId = getGroupId(props.getGroup());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
+    public long getGroupId(String groupPath) throws GroupNotFoundException {
+
+        if (!groupPath.trim().isEmpty()) {
+            try {
+                GHOrganization group = github.getOrganization(groupPath);
+                groupId = group.getId();
+                System.out.println("Saving to GitHub Organization " + group.getLogin());
+            } catch (GHFileNotFoundException e) {
+                throw new GroupNotFoundException("Group \"" + groupPath + "\" is not found");
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                //                                
+                e.printStackTrace();
+            }
+        }
+        return groupId;
+    }
+
     public String createRepository(String repoName) {
         // TODO Auto-generated method stub
         try {
-            repo = github.createRepository(repoName)
-                         .description("Created from Business Central: " + repoName)
-                         .autoInit(false)
-                         .create();
+            if (groupId >= 0) {
+                GHOrganization group = github.getOrganization(props.getGroup());
+                repo = group.createRepository(repoName)
+                     .description("Created from Business Central: " + repoName)
+                     .autoInit(false)
+                     .create();
+            } else {
+                repo = github.createRepository(repoName)
+                             .description("Created from Business Central: " + repoName)
+                             .autoInit(false)
+                             .create();
+            }
             if (user.isEmpty()) {
                 user = repo.getOwnerName();
             }
@@ -67,7 +98,11 @@ public class GitHubIntegration implements GitRemoteIntegration {
 
     public String deleteRepository(String repoName) {
         try {
-            repo = github.getRepository(user + "/" + repoName);
+            if (groupId > 0) {
+                repo = github.getOrganization(props.getGroup()).getRepository(repoName);
+            } else {
+                repo = github.getRepository(user + "/" + repoName);
+            }
             remoteURL = repo.getHttpTransportUrl();
             repo.delete();
         } catch (IOException e) {

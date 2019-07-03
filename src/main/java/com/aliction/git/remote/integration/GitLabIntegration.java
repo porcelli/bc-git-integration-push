@@ -41,7 +41,7 @@ public class GitLabIntegration implements GitRemoteIntegration {
         }
         try {
             user = gitlab.getUserApi().getCurrentUser().getUsername();
-            groupId = getGroupId(props.getGitLabGroup());
+            groupId = getGroupId(props.getGroup());
         } catch (GitLabApiException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -54,6 +54,7 @@ public class GitLabIntegration implements GitRemoteIntegration {
             try {
                 Group group = gitlab.getGroupApi().getGroup(groupPath);
                 groupId = group.getId();
+                System.out.println("Saving to GitLab Group " + group.getFullPath());
             } catch (GitLabApiException e) {
                 // TODO Auto-generated catch block
                 throw new GroupNotFoundException("Group \"" + groupPath + "\" is not found");
@@ -82,7 +83,7 @@ public class GitLabIntegration implements GitRemoteIntegration {
     public String deleteRepository(String repoName) {
         try {
             if (groupId >= 0) {
-                gitlabProject = gitlab.getProjectApi().getProject(props.getGitLabGroup(), repoName);
+                gitlabProject = gitlab.getProjectApi().getProject(props.getGroup(), repoName);
             } else {
                 gitlabProject = gitlab.getProjectApi().getProject(user, repoName);
                 //            gitlabProject = gitlab.getProjectApi().getProject(user + "/" + repoName);

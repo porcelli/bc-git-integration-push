@@ -14,7 +14,8 @@ This project is forked from https://github.com/porcelli/bc-git-integration-push 
  - Ignore pushing: ignore pushing projects with project name matching patterns defined in ignore parameter in config file.
  - Token authentication: add support to use token for both gitlab and github
  - Descriptive messages: add some output messages to instruct users, and provide info.
- - GitLab Groups: add support to create projects under specific GitLab groups.
+ - GitLab Groups: add support to create projects under specific GitLab groups and subgroups.
+ - GitHub Organizations: add support to create repositories under specific GitHub Organizations. 
 
 ## How to build
 
@@ -24,7 +25,7 @@ Clone this repository and build it locally, for this you need `Git`, `Maven` and
 $ git clone https://github.com/AlyIbrahim/pam-githook-integration.git
 $ cd pam-githook-integration
 $ mvn clean install
-$ mkdir -p $APP_SERVER_HOME/hooks/ && cp target/git-push-2.0-SNAPSHOT.jar $APP_SERVER_HOME/hooks/
+$ mkdir -p $APP_SERVER_HOME/hooks/ && cp target/git-push-2.2-SNAPSHOT.jar $APP_SERVER_HOME/hooks/
 ```
 
 ## How to setup
@@ -33,7 +34,7 @@ Create the post-commit hook template for Business Central and, finally, start th
 
 ```shell
 $ cd $APP_SERVER_HOME
-$ echo "#\!/bin/bash\njava -jar $APP_SERVER_HOME/hooks/git-push-1.0-SNAPSHOT.jar" > hooks/post-commit
+$ echo "#\!/bin/bash\njava -jar $APP_SERVER_HOME/hooks/git-push-2.2-SNAPSHOT.jar" > hooks/post-commit
 $ chmod 755 hooks/post-commit
 $ ./bin/standalone.sh -c standalone-full.xml -Dorg.uberfire.nio.git.hooks=$APP_SERVER_HOME/hooks/
 ```
@@ -54,7 +55,7 @@ password=
 token=hdy2Fhd63Gi27h3IJqw
 remoteGitUrl=https://api.github.com
 provider=GitHub
-gitlabGroup=Group/subgroup
+gitGroup=myOrganization
 ignore=.*demo.*, test.*
 ```
 ### Parameters:
@@ -64,13 +65,12 @@ ignore=.*demo.*, test.*
  - **token:** this is the generated token to replace username/password unsecure connection, if this is not set you will get a warning that you are using an unsecured connection.
  - **remoteGitUrl:** This can be either a public provider URL or locally hosted enterprise for any provider.
  - **provider:** This is the flavor of the Git provider, only 3 values are accepted here: GitHub, GitLab and BitBucket when it is supported.
- - **gitlabGroup:** This parameter should contains the GitLab Group path, if it is empty, the default behaviour of creating the project under the user account will take effect.
+ - **gitGroup:** This parameter should contains the GitLab Group path (Group/subgroup), or GitHub Organization, if it is empty, the default creation behavior will use default user account.
  - **ignore:** This is a comma separated regular expressions to ignore the project names that matches any of these expressions
 
 ### Note: 
  - GitLab only supports token authentication
  - GitHub url should be the api url ex: api.github.com and not www.github.com
- - GitLab Groups has no equivalent in Github, so the parameter will be totally ignored when provider is GitHub.
 
 
 ## License
