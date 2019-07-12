@@ -21,7 +21,9 @@ public class GitRemoteProperties {
     private String ignoreList = null;
     private GitProvider gitProvider = null;
     private String gitLabGroup;
+    private String gitHubOrg;
     private Properties props = new Properties();
+    private Boolean useSSH;
 
     public GitRemoteProperties() {
         final File homeDir = new File(System.getProperty("user.home"));
@@ -38,10 +40,12 @@ public class GitRemoteProperties {
         setRemoteGitUrl(props.getProperty("remoteGitUrl"));
         setLogin(props.getProperty("login"));
         setPassword(props.getProperty("password"));
-        setToken(props.getProperty("token"));
+        setToken(props.getProperty("token", ""));
         setIgnoreList(props.getProperty("ignore"));
         setGitProvider(props.getProperty("provider"));
         setGitLabGroup(props.getProperty("gitlabGroup"));
+        setGitHubOrg(props.getProperty("githubOrg", ""));
+        setUseSSH(props.getProperty("useSSH", "false"));
     }
 
     private void loadProperties(File propertyFile) {
@@ -78,11 +82,13 @@ public class GitRemoteProperties {
             propertyFile.createNewFile();
             Properties props = new Properties();
             props.setProperty("provider", "GIT_HUB");
+            props.setProperty("githubOrg", "OrgName");
             props.setProperty("gitlabGroup", "Group/subgroup");
             props.setProperty("remoteGitUrl", "https://api.github.com/");
             props.setProperty("login", "");
             props.setProperty("password", "");
             props.setProperty("token", "");
+            props.setProperty("useSSH", "false");
             props.setProperty("ignore", ".*demo.*, test.*");
             FileOutputStream out = new FileOutputStream(propertyFile);
             props.store(out, "This is an auto generated template empty property file");
@@ -156,5 +162,25 @@ public class GitRemoteProperties {
 
     public String getPropertiesFileName() {
         return "~/.gitremote";
+    }
+
+    public void setGitHubOrg(String gitHubOrg) {
+        this.gitHubOrg = gitHubOrg;
+    }
+
+    public String getGitHubOrg() {
+        return gitHubOrg;
+    }
+
+    public void setUseSSH(final String value) {
+        try {
+            this.useSSH = Boolean.valueOf(value);
+        } catch (Exception ex) {
+            this.useSSH = false;
+        }
+    }
+
+    public boolean getUseSSH() {
+        return useSSH;
     }
 }
