@@ -65,7 +65,13 @@ public class GitHook {
             }
         }
 
-        final GitRemoteIntegration integration = properties.getGitProvider().getRemoteIntegration(properties);
+        final GitRemoteIntegration integration;
+
+        if (!properties.isPushOnlyMode()) {
+            integration = properties.getGitProvider().getRemoteIntegration(properties);
+        } else {
+            integration = null;
+        }
 
         // setup the JGit repository access
         final Repository repo = new FileRepositoryBuilder()
@@ -77,7 +83,7 @@ public class GitHook {
         final StoredConfig storedConfig = repo.getConfig();
         final Set<String> remotes = storedConfig.getSubsections("remote");
 
-        if (remotes.isEmpty()) {
+        if (remotes.isEmpty() && !properties.isPushOnlyMode()) {
             //create a remote repository, if it does not exist
             new SetupRemote(integration).execute(git, currentPath);
         }

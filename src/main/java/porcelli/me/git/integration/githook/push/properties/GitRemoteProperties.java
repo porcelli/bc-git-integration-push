@@ -23,7 +23,8 @@ public class GitRemoteProperties {
     private String gitLabGroup;
     private String gitHubOrg;
     private Properties props = new Properties();
-    private Boolean useSSH;
+    private boolean useSSH;
+    private boolean pushOnlyMode = false;
 
     public GitRemoteProperties() {
         final File homeDir = new File(System.getProperty("user.home"));
@@ -63,6 +64,11 @@ public class GitRemoteProperties {
             return false;
         }
         if (this.getToken().isEmpty()) {
+            if (useSSH && (this.login.isEmpty() || this.password.isEmpty())){
+                LOGGER.warn("Git hook in push mode only. External repository creation won't be executed.");
+                pushOnlyMode = true;
+                return true;
+            }
             if (this.login.isEmpty()) {
                 LOGGER.error("'login' is a mandatory missing value in " + getPropertiesFileName());
                 LOGGER.error("You can set value for 'token' and skip 'login'/'password'");
@@ -182,5 +188,9 @@ public class GitRemoteProperties {
 
     public boolean getUseSSH() {
         return useSSH;
+    }
+
+    public boolean isPushOnlyMode() {
+        return pushOnlyMode;
     }
 }
