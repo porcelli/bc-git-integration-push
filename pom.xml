@@ -22,17 +22,17 @@
       <dependency>
         <groupId>org.eclipse.jgit</groupId>
         <artifactId>org.eclipse.jgit</artifactId>
-        <version>4.8.0.201706111038-r</version>
+        <version>5.4.0.201906121030-r</version>
       </dependency>
       <dependency>
         <groupId>org.kohsuke</groupId>
         <artifactId>github-api</artifactId>
-        <version>1.94</version>
+        <version>1.95</version>
       </dependency>
       <dependency>
         <groupId>org.gitlab4j</groupId>
         <artifactId>gitlab4j-api</artifactId>
-        <version>4.9.19</version>
+        <version>4.11.15</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
