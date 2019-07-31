@@ -101,7 +101,7 @@ public class GitLabIntegration implements GitRemoteIntegration {
     public CredentialsProvider getCredentialsProvider() {
         // TODO Auto-generated method stub
         if (usingToken) {
-            credentialsProvider = new UsernamePasswordCredentialsProvider(props.getLogin(), props.getToken());
+            credentialsProvider = new UsernamePasswordCredentialsProvider("", props.getToken());
         } else {
             credentialsProvider = new UsernamePasswordCredentialsProvider(props.getLogin(), props.getPassword());
         }
