@@ -13,6 +13,8 @@ This is a sample project that shows how to setup Business Central to automatical
  - Ignore pushing: ignore pushing projects with project name matching patterns defined in ignore parameter in config file.
  - Token authentication: add support to use token for both gitlab and github
  - Descriptive messages: add some output messages to instruct users, and provide info.
+ - GitLab Groups: add support to create projects under specific GitLab groups and subgroups.
+ - GitHub Organizations: add support to create repositories under specific GitHub Organizations. 
 
 ## How to build
 
