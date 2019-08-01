@@ -16,18 +16,6 @@ This is a sample project that shows how to setup Business Central to automatical
  - GitLab Groups: add support to create projects under specific GitLab groups and subgroups.
  - GitHub Organizations: add support to create repositories under specific GitHub Organizations. 
 
-## New Integrations:
- - GitHub Enterprise
- - GitLab
- - GitLab Enterprise
-
-## New Features
- - Configuration file template auto generation : Generating template config file ~/.gitremote
- - Configuraiton check: check for mandatory parameters in config file
- - Ignore pushing: ignore pushing projects with project name matching patterns defined in ignore parameter in config file.
- - Token authentication: add support to use token for both gitlab and github
- - Descriptive messages: add some output messages to instruct users, and provide info.
-
 ## How to build
 
 Clone this repository and build it locally, for this you need `Git`, `Maven` and `JDK 8`.
@@ -89,7 +77,6 @@ $ ./bin/standalone.sh -c standalone-full.xml -Dorg.uberfire.nio.git.hooks=$APP_S
 ## Contributors
 
 Spacial thank you for [AlyIbrahim](https://github.com/AlyIbrahim) for all valuable enhancements.
->>>>>>> upstream/master
 
 ## License
 
