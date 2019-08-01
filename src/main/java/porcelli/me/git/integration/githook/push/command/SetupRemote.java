@@ -9,14 +9,13 @@ import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.StoredConfig;
-
-import com.aliction.git.remote.integration.GitRemoteIntegration;
+import porcelli.me.git.integration.githook.push.integration.GitRemoteIntegration;
 
 public class SetupRemote implements Command {
 
     private final GitRemoteIntegration integration;
 
-    public SetupRemote(GitRemoteIntegration integration) {
+    public SetupRemote(final GitRemoteIntegration integration) {
         this.integration = integration;
     }
 
@@ -36,6 +35,7 @@ public class SetupRemote implements Command {
             storedConfig.setString("branch", shortName, "merge", "refs/heads/" + shortName);
         }
         storedConfig.save();
+
         git.push().setCredentialsProvider(integration.getCredentialsProvider()).call();
         return repoName;
     }
