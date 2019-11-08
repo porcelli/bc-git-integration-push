@@ -46,6 +46,7 @@ useSSH=false
 ignore=.*demo.*, test.*
 githubOrg=OrgName
 gitlabGroup=Group/subgroup
+bitbucketTeam=
 ```
 ### Parameters:
 
