@@ -10,6 +10,7 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import porcelli.me.git.integration.githook.push.properties.GitRemoteProperties;
 
 public class GitHubIntegration implements GitRemoteIntegration {

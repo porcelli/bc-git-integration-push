@@ -9,6 +9,7 @@ import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.StoredConfig;
+
 import porcelli.me.git.integration.githook.push.integration.GitRemoteIntegration;
 
 public class SetupRemote implements Command {

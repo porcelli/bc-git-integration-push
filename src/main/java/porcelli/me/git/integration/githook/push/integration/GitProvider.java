@@ -12,6 +12,11 @@ public enum GitProvider {
         public GitRemoteIntegration getRemoteIntegration(GitRemoteProperties prop) {
             return new GitLabIntegration(prop);
         }
+    },
+    BIT_BUCKET {
+        public GitRemoteIntegration getRemoteIntegration(GitRemoteProperties prop) {
+            return new BitBucketIntegration(prop);
+        }
     };
 
     public abstract GitRemoteIntegration getRemoteIntegration(GitRemoteProperties prop);
