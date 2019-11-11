@@ -26,12 +26,12 @@ Clone this repository and build it locally, for this you need `Git`, `Maven` and
 $ git clone https://github.com/porcelli/bc-git-integration-push.git
 $ cd bc-git-integration-push
 $ mvn clean install
-$ mkdir -p $APP_SERVER_HOME/hooks/ && cp target/git-push-2.2-SNAPSHOT.jar $APP_SERVER_HOME/hooks/
+$ mkdir -p $APP_SERVER_HOME/hooks/ && cp target/git-push-2.1-SNAPSHOT.jar $APP_SERVER_HOME/hooks/
 ```
 
 ## How to setup
 
-The application uses a configuration file `.gitremote` that is located under the user home directory, if you don’t want to start from scratch, you can start running the jar file for the first time after the setup above or just as java -jar git-push-2.2-SNAPSHOT.jar, the application will generate a template configuration file in $HOME/.gitremote that you can follow and modify.
+The application uses a configuration file `.gitremote` that is located under the user home directory, if you don’t want to start from scratch, you can start running the jar file for the first time after the setup above or just as java -jar git-push-2.1-SNAPSHOT.jar, the application will generate a template configuration file in $HOME/.gitremote that you can follow and modify.
 
 ### Example “.gitremote”
 
@@ -72,7 +72,7 @@ Create a post-commit hook template for Business Central and, finally, start the 
 
 ```shell
 $ cd $APP_SERVER_HOME
-$ echo "#\!/bin/bash\njava -jar $APP_SERVER_HOME/hooks/git-push-2.2-SNAPSHOT.jar" > hooks/post-commit
+$ echo "#\!/bin/bash\njava -jar $APP_SERVER_HOME/hooks/git-push-2.1-SNAPSHOT.jar" > hooks/post-commit
 $ chmod 755 hooks/post-commit
 $ ./bin/standalone.sh -c standalone-full.xml -Dorg.uberfire.nio.git.hooks=$APP_SERVER_HOME/hooks/
 ```
