@@ -46,6 +46,7 @@ useSSH=false
 ignore=.*demo.*, test.*
 githubOrg=OrgName
 gitlabGroup=Group/subgroup
+bitbucketTeam=TeamName
 ```
 ### Parameters:
 
@@ -58,7 +59,7 @@ gitlabGroup=Group/subgroup
  - **ignore:** This is a comma separated regular expressions to ignore the project names that matches any of these expressions. Optional.
  - **githubOrg:** If GitHub is used as provider, it's possible to define the repository organization in this property. Optional.
  - **gitlabGroup:** If GitLab is used as provider, it's possible to define the group/subgroup in this property. Optional.
- - **gitlabGroup:** If BitBucket is used as provider, it's to define your BitBucket Team name in this property. Optional.
+ - **bitbucketTeam:** If BitBucket is used as provider, it's to define your BitBucket Team name in this property. Optional.
 
 ### Note:
  - GitLab only supports token authentication
