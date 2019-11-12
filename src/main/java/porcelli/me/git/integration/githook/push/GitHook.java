@@ -1,7 +1,5 @@
 package porcelli.me.git.integration.githook.push;
 
-import static java.util.Comparator.comparing;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -9,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.PushCommand;
@@ -26,13 +25,12 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.SshTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.jcraft.jsch.Session;
-
 import porcelli.me.git.integration.githook.push.command.SetupRemote;
 import porcelli.me.git.integration.githook.push.integration.GitRemoteIntegration;
 import porcelli.me.git.integration.githook.push.properties.GitRemoteProperties;
 import porcelli.me.git.integration.githook.push.properties.IgnoreList;
+
+import static java.util.Comparator.comparing;
 
 public class GitHook {
 
