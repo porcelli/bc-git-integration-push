@@ -28,7 +28,6 @@ public class BitBucketIntegration implements GitRemoteIntegration {
     private CredentialsProvider credentialsProvider;
     private BitbucketTeam team = null;
     private BitbucketUser user;
-    private String providerURL;
 
     public BitBucketIntegration(final GitRemoteProperties props) {
         if (props.getToken().isEmpty()) {
@@ -39,7 +38,6 @@ public class BitBucketIntegration implements GitRemoteIntegration {
             bitbucket = new BitbucketV2API(props.getRemoteGitUrl(), props.getLogin(), props.getToken());
         }
         user = bitbucket.UserAPI().getLoggedUser();
-        providerURL = props.getRemoteGitUrl();
         credentialsProvider = new UsernamePasswordCredentialsProvider(props.getLogin(), props.getToken());
         if (!props.getBitbucketTeam().isEmpty()) {
             team = getTeam(props.getBitbucketTeam());
@@ -61,24 +59,23 @@ public class BitBucketIntegration implements GitRemoteIntegration {
             createdRepository = bitbucket.RepositoryAPI().createRepository(repository);
             repoURL = createdRepository.getLinks().getClone_https();
         } catch (BitbucketCreateRepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error("An unexpected error occurred.", e);
+            throw new RuntimeException(e);
         }
 
         return repoURL;
     }
 
     public BitbucketTeam getTeam(final String groupPath) {
-        //        LOGGER.info("Bitbucket has no support for Groups");
         List<BitbucketTeam> teams = null;
         try {
             teams = bitbucket.TeamAPI().getUserTeams(BitbucketRole.ADMIN);
         } catch (BitbucketGetTeamException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error("An unexpected error occurred.", e);
+            throw new RuntimeException(e);
         } catch (BitbucketPageException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error("An unexpected error occurred.", e);
+            throw new RuntimeException(e);
         }
         for (BitbucketTeam team : teams) {
             if (team.getUsername().equals(groupPath)) {
