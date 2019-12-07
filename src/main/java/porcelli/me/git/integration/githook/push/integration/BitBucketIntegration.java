@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aliction.gitproviders.bitbucket.client.BitbucketV2API;
 import com.aliction.gitproviders.bitbucket.exceptions.BitbucketCreateRepositoryException;
-import com.aliction.gitproviders.bitbucket.exceptions.BitbucketGetTeamException;
-import com.aliction.gitproviders.bitbucket.exceptions.BitbucketPageException;
 import com.aliction.gitproviders.bitbucket.objects.BitbucketRepository;
 import com.aliction.gitproviders.bitbucket.objects.BitbucketRole;
 import com.aliction.gitproviders.bitbucket.objects.BitbucketTeam;
@@ -41,7 +39,6 @@ public class BitBucketIntegration implements GitRemoteIntegration {
         credentialsProvider = new UsernamePasswordCredentialsProvider(props.getLogin(), props.getToken());
         if (!props.getBitbucketTeam().isEmpty()) {
             team = getTeam(props.getBitbucketTeam());
-        } else {
         }
     }
 
@@ -70,10 +67,7 @@ public class BitBucketIntegration implements GitRemoteIntegration {
         List<BitbucketTeam> teams = null;
         try {
             teams = bitbucket.TeamAPI().getUserTeams(BitbucketRole.ADMIN);
-        } catch (BitbucketGetTeamException e) {
-            LOGGER.error("An unexpected error occurred.", e);
-            throw new RuntimeException(e);
-        } catch (BitbucketPageException e) {
+        } catch (Exception e) {
             LOGGER.error("An unexpected error occurred.", e);
             throw new RuntimeException(e);
         }
