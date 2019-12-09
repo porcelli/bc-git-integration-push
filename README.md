@@ -6,6 +6,7 @@ This is a sample project that shows how to setup Business Central to automatical
  - GitHub Enterprise
  - GitLab
  - GitLab Enterprise
+ - Bitbucket API V2
 
 ## New Features
  - Configuration file template auto generation : Generating template config file ~/.gitremote
@@ -15,6 +16,7 @@ This is a sample project that shows how to setup Business Central to automatical
  - Descriptive messages: add some output messages to instruct users, and provide info.
  - GitLab Groups: add support to create projects under specific GitLab groups and subgroups.
  - GitHub Organizations: add support to create repositories under specific GitHub Organizations. 
+ - BitbucketTeams: add support to create repositories under specific BitBucket Teams.
 
 ## How to build
 
@@ -44,6 +46,7 @@ useSSH=false
 ignore=.*demo.*, test.*
 githubOrg=OrgName
 gitlabGroup=Group/subgroup
+bitbucketTeam=TeamName
 ```
 ### Parameters:
 
@@ -56,10 +59,13 @@ gitlabGroup=Group/subgroup
  - **ignore:** This is a comma separated regular expressions to ignore the project names that matches any of these expressions. Optional.
  - **githubOrg:** If GitHub is used as provider, it's possible to define the repository organization in this property. Optional.
  - **gitlabGroup:** If GitLab is used as provider, it's possible to define the group/subgroup in this property. Optional.
+ - **bitbucketTeam:** If BitBucket is used as provider, it's to define your BitBucket Team name in this property. Optional.
 
 ### Note:
  - GitLab only supports token authentication
+ - Bitbucket only supports token authentication
  - Public GitHub url should be the api url ex: api.github.com and not www.github.com
+ - Public Bitbucket url should be the api url ex: api.bitbucket.org and not www.bitbucket.com
 
 ## Enabling and Running
 

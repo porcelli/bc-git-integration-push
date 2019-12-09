@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import porcelli.me.git.integration.githook.push.integration.GitProvider;
 
 public class GitRemoteProperties {
@@ -20,8 +21,9 @@ public class GitRemoteProperties {
     private String token = null;
     private String ignoreList = null;
     private GitProvider gitProvider = null;
-    private String gitLabGroup;
     private String gitHubOrg;
+    private String gitLabGroup;
+    private String bitbucketTeam;
     private Properties props = new Properties();
     private boolean useSSH;
     private boolean pushOnlyMode = false;
@@ -31,7 +33,7 @@ public class GitRemoteProperties {
         final File propertyFile = new File(homeDir, ".gitremote");
 
         if (!propertyFile.exists()) {
-            LOGGER.error(getPropertiesFileName() + " file does not exists. A sample will be automatically generated that will require manual input of valida data.");
+            LOGGER.error(getPropertiesFileName() + " file does not exists. A sample will be automatically generated that will require manual input of valid data.");
             createTemplate(propertyFile);
             return;
         }
@@ -44,8 +46,9 @@ public class GitRemoteProperties {
         setToken(props.getProperty("token", ""));
         setIgnoreList(props.getProperty("ignore"));
         setGitProvider(props.getProperty("provider"));
-        setGitLabGroup(props.getProperty("gitlabGroup"));
+        setGitLabGroup(props.getProperty("gitlabGroup", ""));
         setGitHubOrg(props.getProperty("githubOrg", ""));
+        setBitbucketTeam(props.getProperty("bitbucketTeam", ""));
         setUseSSH(props.getProperty("useSSH", "false"));
     }
 
@@ -89,6 +92,7 @@ public class GitRemoteProperties {
             Properties props = new Properties();
             props.setProperty("provider", "GIT_HUB");
             props.setProperty("githubOrg", "OrgName");
+            props.setProperty("bitbucketTeam", "TeamName");
             props.setProperty("gitlabGroup", "Group/subgroup");
             props.setProperty("remoteGitUrl", "https://api.github.com/");
             props.setProperty("login", "");
@@ -118,12 +122,28 @@ public class GitRemoteProperties {
         LOGGER.info("The git provider is : " + gitProvider);
     }
 
+    public String getGitHubOrg() {
+        return gitHubOrg;
+    }
+
+    public void setGitHubOrg(String gitHubOrg) {
+        this.gitHubOrg = gitHubOrg;
+    }
+
     public String getGitLabGroup() {
         return gitLabGroup;
     }
 
     public void setGitLabGroup(final String gitLabGroup) {
         this.gitLabGroup = gitLabGroup;
+    }
+
+    public String getBitbucketTeam() {
+        return bitbucketTeam;
+    }
+
+    public void setBitbucketTeam(String bitbucketTeam) {
+        this.bitbucketTeam = bitbucketTeam;
     }
 
     public String getRemoteGitUrl() {
@@ -168,14 +188,6 @@ public class GitRemoteProperties {
 
     public String getPropertiesFileName() {
         return "~/.gitremote";
-    }
-
-    public void setGitHubOrg(String gitHubOrg) {
-        this.gitHubOrg = gitHubOrg;
-    }
-
-    public String getGitHubOrg() {
-        return gitHubOrg;
     }
 
     public void setUseSSH(final String value) {
