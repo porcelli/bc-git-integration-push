@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>me.porcelli.git-integration</groupId>
-  <artifactId>git-push</artifactId>
-  <version>2.1-SNAPSHOT</version>
+  <groupId>me.porcelli.bc-git-integration</groupId>
+  <artifactId>bc-git-integration-parent</artifactId>
+  <version>2.2.0-SNAPSHOT</version>
 
-  <name>GitHub Push Integration</name>
-  <packaging>jar</packaging>
+  <name>Sample Business Central Git Integration with GitHub - Using GitHooks and WebHooks</name>
+  <packaging>pom</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -40,6 +41,11 @@
         <version>1.2.3</version>
       </dependency>
       <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jaxrs</artifactId>
+        <version>3.0.19.Final</version>
+      </dependency>
+      <dependency>
         <groupId>com.aliction</groupId>
         <artifactId>bitbucket-client</artifactId>
         <version>0.2.1</version>
@@ -50,37 +56,34 @@
         <version>2.29.1</version>
         <scope>runtime</scope>
       </dependency>
-
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-servlet-initializer</artifactId>
+        <version>3.0.19.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-servlet</artifactId>
+        <version>9.3.14.v20161028</version>
+      </dependency>
+      <dependency>
+        <groupId>me.porcelli.bc-git-integration</groupId>
+        <artifactId>bc-git-integration-common</artifactId>
+        <version>2.2.0-SNAPSHOT</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
-  <dependencies>
-
-    <dependency>
-      <groupId>com.aliction</groupId>
-      <artifactId>bitbucket-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jgit</groupId>
-      <artifactId>org.eclipse.jgit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kohsuke</groupId>
-      <artifactId>github-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.gitlab4j</groupId>
-      <artifactId>gitlab4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-json-jackson</artifactId>
-    </dependency>
-  </dependencies>
+  <modules>
+    <module>bc-git-integration-common</module>
+    <module>bc-git-integration-webhook</module>
+    <module>bc-git-integration-push</module>
+  </modules>
 
   <build>
     <plugins>
