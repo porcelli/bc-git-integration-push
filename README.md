@@ -48,6 +48,9 @@ githubOrg=OrgName
 gitlabGroup=Group/subgroup
 bitbucketTeam=TeamName
 ```
+
+Append "setupRemoteURL=" and the remote repo URL (e.g.: https://github.com/itsbigspark/dev-decision-manager.git) to the end of the .gitremote file contents.
+
 ### Parameters:
 
  - **provider:** This is the flavor of the Git provider, currently only two values are accepted: GIT_HUB and GIT_LAB. Mandatory.
