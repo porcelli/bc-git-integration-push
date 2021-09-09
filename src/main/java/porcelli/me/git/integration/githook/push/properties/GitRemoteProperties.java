@@ -27,6 +27,7 @@ public class GitRemoteProperties {
     private Properties props = new Properties();
     private boolean useSSH;
     private boolean pushOnlyMode = false;
+    private String remoteGitRepoUrl = null;
 
     public GitRemoteProperties() {
         final File homeDir = new File(System.getProperty("user.home"));
@@ -50,6 +51,7 @@ public class GitRemoteProperties {
         setGitHubOrg(props.getProperty("githubOrg", ""));
         setBitbucketTeam(props.getProperty("bitbucketTeam", ""));
         setUseSSH(props.getProperty("useSSH", "false"));
+        setRemoteGitRepoUrl(props.getProperty("remoteGitRepoUrl"));
     }
 
     private void loadProperties(File propertyFile) {
@@ -64,6 +66,10 @@ public class GitRemoteProperties {
     public boolean validate() {
         if (gitProvider == null) {
             LOGGER.error("'provider' is a mandatory missing or incorrect value in " + getPropertiesFileName());
+            return false;
+        }
+        if (remoteGitRepoUrl == null) {
+            LOGGER.error("'remoteGitRepoUrl' is a mandatory missing value in " + getPropertiesFileName());
             return false;
         }
         if (this.getToken().isEmpty()) {
@@ -95,6 +101,7 @@ public class GitRemoteProperties {
             props.setProperty("bitbucketTeam", "TeamName");
             props.setProperty("gitlabGroup", "Group/subgroup");
             props.setProperty("remoteGitUrl", "https://api.github.com/");
+            props.setProperty("remoteGitRepoUrl", "");
             props.setProperty("login", "");
             props.setProperty("password", "");
             props.setProperty("token", "");
@@ -205,4 +212,13 @@ public class GitRemoteProperties {
     public boolean isPushOnlyMode() {
         return pushOnlyMode;
     }
+
+    public String getRemoteGitRepoUrl() {
+        return remoteGitRepoUrl;
+    }
+
+    private void setRemoteGitRepoUrl(String remoteGitRepoUrl) {
+        this.remoteGitRepoUrl = remoteGitRepoUrl;
+    }
+
 }

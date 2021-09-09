@@ -85,7 +85,7 @@ public class GitHook {
 
         if (remotes.isEmpty() && !properties.isPushOnlyMode()) {
             //create a remote repository, if it does not exist
-            new SetupRemote(integration).execute(git, currentPath);
+            new SetupRemote(integration).execute(git, currentPath, properties.getRemoteGitRepoUrl());
         }
 
         // mechanism to find the latest commit
